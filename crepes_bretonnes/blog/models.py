@@ -37,6 +37,7 @@ class Moteur(models.Model):
     def __str__(self):
         return self.nom
 
+
 class Voiture(models.Model):
     nom = models.CharField(max_length=25)
     moteur = models.OneToOneField(Moteur, on_delete=models.CASCADE)
@@ -44,11 +45,13 @@ class Voiture(models.Model):
     def __str__(self):
         return self.nom
 
+
 class Produit(models.Model):
     nom = models.CharField(max_length=30)
 
     def __str__(self):
         return self.nom
+
 
 class Vendeur(models.Model):
     nom = models.CharField(max_length=30)
@@ -59,6 +62,7 @@ class Vendeur(models.Model):
     def __str__(self):
         return self.nom
 
+
 class Offre(models.Model):
     prix = models.IntegerField()
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
@@ -66,3 +70,19 @@ class Offre(models.Model):
 
     def __str__(self):
         return "{0} vendu par {1}".format(self.produit, self.vendeur)
+
+
+class Contact(models.Model):
+
+    def renommage(instance, nom_fichier):
+        return "photos/{}-{}".format(instance.id, nom_fichier)
+
+    nom = models.CharField(max_length=255)
+    adresse = models.TextField()
+    photo = models.ImageField(upload_to=renommage, verbose_name="photo")
+
+    def __str__(self):
+        return self.nom
+
+
+

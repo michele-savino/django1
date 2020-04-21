@@ -48,3 +48,9 @@ class ArticleForm(forms.ModelForm):
 
 
 # vedi pagina sui formi per vedere come salvare un nuovo articolo tramite un form oppure aggiornarne uno esistente
+
+
+class NouveauContactForm(forms.Form):
+    nom = forms.CharField()
+    adresse = forms.CharField(widget=forms.Textarea)
+    photo = forms.ImageField()

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>Liste des contacts</h1>
+{% for contact in contacts %}
+    <h2>{{ contact.nom }}</h2>
+    Adresse : {{ contact.adresse|linebreaks }}<br/>
+    <img src="{{ contact.photo.url }}"/>
+{% endfor %}
+
+</body>
+</html>
