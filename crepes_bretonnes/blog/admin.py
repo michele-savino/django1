@@ -5,7 +5,7 @@ from blog.models import Categorie, Article
 
 class ArticleAdmin(admin.ModelAdmin):
     list_display   = ('titre', 'categorie', 'auteur', 'date', 'apercu_contenu')
-    list_filter    = ('auteur','categorie', )
+    list_filter    = ('auteur','categorie', 'date')
     date_hierarchy = 'date'
     ordering       = ('date', )
     search_fields  = ('titre', 'contenu')
