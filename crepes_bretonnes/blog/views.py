@@ -1,8 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from datetime import datetime
+
+from django.urls import reverse
+
 from .models import Article, Contact
-from .forms import ContactForm, NouveauContactForm
+from .forms import ContactForm, NouveauContactForm, ConnexionForm
+from django.contrib.auth import authenticate, login, logout
 
 
 def home(request):
@@ -11,6 +16,7 @@ def home(request):
         <h1>Bienvenue sur mon blog !</h1>
         <p>Les crêpes bretonnes ça tue des mouettes en plein vol !</p>
     """)
+
 
 # def view_article(request, id_article):
 #     """
@@ -28,17 +34,22 @@ def list_articles(request, month, year):
         "Vous avez demandé les articles de {0} {1}.".format(month, year)
     )
 
+
 def view_article(request, id_article):
     if id_article > 100:
         raise Http404
 
     return redirect(view_redirection)
 
+
 def view_redirection(request):
     return HttpResponse("Vous avez été redirigé.")
 
+
+@login_required(redirect_field_name='rediriger_vers')
 def date_actuelle(request):
     return render(request, 'blog/date.html', {'date': datetime.now()})
+
 
 def addition(request, nombre1, nombre2):
     total = nombre1 + nombre2
@@ -46,10 +57,12 @@ def addition(request, nombre1, nombre2):
     # Retourne nombre1, nombre2 et la somme des deux au tpl
     return render(request, 'blog/addition.html', locals())
 
+
 def accueil(request):
     """ Afficher tous les articles de notre blog """
-    articles = Article.objects.all() # Nous sélectionnons tous nos articles
+    articles = Article.objects.all()  # Nous sélectionnons tous nos articles
     return render(request, 'blog/accueil.html', {'derniers_articles': articles})
+
 
 def lire(request, id, slug):
     try:
@@ -109,3 +122,32 @@ def voir_contacts(request):
         'blog/voir_contacts.html',
         {'contacts': Contact.objects.all()}
     )
+
+
+def connexion(request):
+    error = False
+
+    if request.method == "POST":
+        form = ConnexionForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+            user = authenticate(username=username, password=password)  # Nous vérifions si les données sont correctes
+            if user:  # Si l'objet renvoyé n'est pas None
+                login(request, user)  # nous connectons l'utilisateur
+            else:  # sinon une erreur sera affichée
+                error = True
+    else:
+        form = ConnexionForm()
+
+    return render(request, 'blog/connexion.html', locals())
+
+
+def deconnexion(request):
+    logout(request)
+    return redirect(reverse(connexion))
+
+# def dire_bonjour(request):
+#     if request.user.is_authenticated():
+#         return HttpResponse("Salut, {0} !".format(request.user.username))
+#     return HttpResponse("Salut, anonyme.")

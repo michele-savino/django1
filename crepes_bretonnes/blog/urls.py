@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.urls import path
 from . import views
 
@@ -15,5 +16,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('nouveau_contact/', views.nouveau_contact, name='nouveau_contact'),
     path('voir_contacts/', views.voir_contacts),
+    url(r'^connexion$', views.connexion, name='connexion'),
+    url(r'^deconnexion$', views.deconnexion, name='deconnexion'),
 ]
 
